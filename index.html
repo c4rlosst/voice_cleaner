@@ -419,9 +419,13 @@
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 updateProgress(60);
                 
+                console.log('Audio buffer loaded:', audioBuffer.duration, 'seconds');
+                
                 // Apply noise reduction
                 const cleanedBuffer = await applyNoiseReduction(audioBuffer, audioContext);
                 updateProgress(80);
+                
+                console.log('Audio processed');
                 
                 // Convert to WAV
                 cleanedBlob = bufferToWave(cleanedBuffer);
@@ -429,6 +433,7 @@
                 cleanedAudio.src = url;
                 document.getElementById('cleanedAudioSection').style.display = 'block';
                 downloadBtn.disabled = false;
+                cleanBtn.disabled = false;
                 
                 updateProgress(100);
                 showStatus('Audio cleaned successfully!', 'ready', false);
@@ -439,6 +444,7 @@
                 showStatus('Error: ' + err.message, 'error', false);
                 cleanBtn.disabled = false;
                 console.error('Processing error:', err);
+                console.error('Error stack:', err.stack);
             }
         };
 
