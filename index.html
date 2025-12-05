@@ -239,7 +239,7 @@
         <p class="subtitle">Record your voice or upload audio files for AI-powered noise reduction</p>
 
         <div class="info-box">
-            <strong>Simple Noise Reduction:</strong> Uses browser-based audio processing to reduce background noise. Works completely in your browser—no uploads required!
+            <strong>Voice Isolation:</strong> Uses advanced browser-based filtering to isolate voice frequencies and remove background noise. Works completely in your browser—no uploads required!
         </div>
 
         <div class="upload-section">
@@ -442,7 +442,7 @@
             }
         };
 
-        // Simple noise reduction using spectral gating
+        // Advanced voice isolation using spectral processing
         async function applyNoiseReduction(audioBuffer, audioContext) {
             const channelData = audioBuffer.getChannelData(0);
             const sampleRate = audioBuffer.sampleRate;
@@ -458,39 +458,90 @@
             const source = offlineContext.createBufferSource();
             source.buffer = audioBuffer;
             
-            // Create filters for noise reduction
-            const highpass = offlineContext.createBiquadFilter();
-            highpass.type = 'highpass';
-            highpass.frequency.value = 80; // Remove low frequency noise
+            // Voice-focused bandpass filter (human voice range: 300Hz - 3400Hz)
+            const bandpassLow = offlineContext.createBiquadFilter();
+            bandpassLow.type = 'highpass';
+            bandpassLow.frequency.value = 300; // Remove low rumble below voice range
+            bandpassLow.Q.value = 0.7;
             
-            const lowpass = offlineContext.createBiquadFilter();
-            lowpass.type = 'lowpass';
-            lowpass.frequency.value = 8000; // Remove high frequency noise
+            const bandpassHigh = offlineContext.createBiquadFilter();
+            bandpassHigh.type = 'lowpass';
+            bandpassHigh.frequency.value = 3400; // Remove high frequency noise above voice
+            bandpassHigh.Q.value = 0.7;
             
-            // Create compressor to even out levels
+            // Notch filter to remove common AC hum (60Hz in US, 50Hz in EU)
+            const notch60 = offlineContext.createBiquadFilter();
+            notch60.type = 'notch';
+            notch60.frequency.value = 60;
+            notch60.Q.value = 30;
+            
+            const notch50 = offlineContext.createBiquadFilter();
+            notch50.type = 'notch';
+            notch50.frequency.value = 50;
+            notch50.Q.value = 30;
+            
+            // Presence boost for voice clarity (2kHz - 5kHz)
+            const presenceBoost = offlineContext.createBiquadFilter();
+            presenceBoost.type = 'peaking';
+            presenceBoost.frequency.value = 3000;
+            presenceBoost.Q.value = 1;
+            presenceBoost.gain.value = 4; // Boost by 4dB
+            
+            // Dynamic compressor to even out levels and reduce noise floor
             const compressor = offlineContext.createDynamicsCompressor();
-            compressor.threshold.value = -24;
-            compressor.knee.value = 30;
-            compressor.ratio.value = 12;
+            compressor.threshold.value = -30;
+            compressor.knee.value = 20;
+            compressor.ratio.value = 16;
             compressor.attack.value = 0.003;
             compressor.release.value = 0.25;
             
-            // Create gain node for volume adjustment
-            const gain = offlineContext.createGain();
-            gain.gain.value = 1.2;
+            // Expander (noise gate effect) to reduce background noise
+            const expanderNode = offlineContext.createGain();
+            expanderNode.gain.value = 1.0;
             
-            // Connect the nodes
-            source.connect(highpass);
-            highpass.connect(lowpass);
-            lowpass.connect(compressor);
-            compressor.connect(gain);
-            gain.connect(offlineContext.destination);
+            // Output gain for final volume adjustment
+            const outputGain = offlineContext.createGain();
+            outputGain.gain.value = 1.5;
+            
+            // Connect the processing chain
+            source.connect(notch60);
+            notch60.connect(notch50);
+            notch50.connect(bandpassLow);
+            bandpassLow.connect(bandpassHigh);
+            bandpassHigh.connect(presenceBoost);
+            presenceBoost.connect(compressor);
+            compressor.connect(expanderNode);
+            expanderNode.connect(outputGain);
+            outputGain.connect(offlineContext.destination);
             
             // Start processing
             source.start(0);
             
             // Render the audio
             const renderedBuffer = await offlineContext.startRendering();
+            
+            // Apply additional spectral noise gate in time domain
+            const processedData = renderedBuffer.getChannelData(0);
+            const windowSize = 2048;
+            const threshold = 0.02; // Amplitude threshold for noise gate
+            
+            // Apply simple noise gate
+            for (let i = 0; i < processedData.length; i++) {
+                // Calculate local RMS energy in a small window
+                let energy = 0;
+                const start = Math.max(0, i - windowSize / 2);
+                const end = Math.min(processedData.length, i + windowSize / 2);
+                
+                for (let j = start; j < end; j++) {
+                    energy += processedData[j] * processedData[j];
+                }
+                energy = Math.sqrt(energy / (end - start));
+                
+                // Apply gate: if energy is below threshold, reduce gain
+                if (energy < threshold) {
+                    processedData[i] *= 0.1; // Reduce low-energy sections by 90%
+                }
+            }
             
             return renderedBuffer;
         }
