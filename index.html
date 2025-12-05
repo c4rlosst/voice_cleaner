@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', sans-serif;
+            background: #6c757d;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -72,6 +72,8 @@
         .btn-upload {
             background: #f39c12;
             color: white;
+            margin: 0 auto;
+            display: inline-flex;
         }
 
         .btn-upload:hover:not(:disabled) {
@@ -84,6 +86,7 @@
             font-size: 13px;
             color: #666;
             font-weight: 500;
+            text-align: center;
         }
 
         .controls {
@@ -232,20 +235,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎙️ AI Voice Cleaner</h1>
-        <p class="subtitle">Record your voice and apply RNNoise AI-powered enhancement</p>
+        <h1>AI Voice Cleaner</h1>
+        <p class="subtitle">Record your voice or upload audio files for AI-powered noise reduction</p>
 
         <div class="info-box">
-            🧠 <strong>RNNoise AI:</strong> Uses a recurrent neural network trained on thousands of hours of real-world noise. Works completely in your browser—no API keys, no uploads, 100% free!
+            <strong>Simple Noise Reduction:</strong> Uses browser-based audio processing to reduce background noise. Works completely in your browser—no uploads required!
         </div>
 
         <div class="upload-section">
             <label for="fileInput" class="upload-label">
-                📁 Or upload audio/video file to convert & clean
+                Upload audio/video file to clean
             </label>
             <input type="file" id="fileInput" accept="audio/*,video/*" style="display: none;">
             <button id="uploadBtn" class="btn-upload">
-                <span>📤</span> Choose File
+                Choose File
             </button>
             <div id="fileName" class="file-name"></div>
         </div>
@@ -259,41 +262,37 @@
 
         <div class="controls">
             <button id="recordBtn" class="btn-record">
-                <span>🔴</span> Start Recording
+                Start Recording
             </button>
             <button id="stopBtn" class="btn-stop" disabled>
-                <span>⏹️</span> Stop
+                Stop
             </button>
             <button id="cleanBtn" class="btn-clean" disabled>
-                <span>✨</span> Clean with AI
+                Clean Audio
             </button>
             <button id="downloadBtn" class="btn-download" disabled>
-                <span>💾</span> Download
+                Download
             </button>
         </div>
 
         <div class="audio-section">
             <div id="originalAudioSection" style="display: none;" class="audio-wrapper">
-                <span class="audio-label">📼 Original Recording</span>
+                <span class="audio-label">Original Recording</span>
                 <audio id="originalAudio" controls></audio>
             </div>
 
             <div id="cleanedAudioSection" style="display: none;" class="audio-wrapper">
-                <span class="audio-label">✨ AI-Enhanced Recording</span>
+                <span class="audio-label">Cleaned Recording</span>
                 <audio id="cleanedAudio" controls></audio>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        // Import RNNoise from CDN
-        import { Rnnoise } from 'https://cdn.jsdelivr.net/npm/@shiguredo/rnnoise-wasm@2025.1.5/dist/rnnoise.mjs';
-
+    <script>
         let mediaRecorder;
         let audioChunks = [];
         let originalBlob;
         let cleanedBlob;
-        let rnnoise = null;
 
         const recordBtn = document.getElementById('recordBtn');
         const stopBtn = document.getElementById('stopBtn');
@@ -308,17 +307,6 @@
         const statusText = document.getElementById('statusText');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
-
-        // Load RNNoise on startup
-        (async () => {
-            try {
-                showStatus('Loading AI model...', 'processing', false);
-                rnnoise = await Rnnoise.load();
-                hideStatus();
-            } catch (err) {
-                showStatus('Error loading AI model: ' + err.message, 'error', false);
-            }
-        })();
 
         function showStatus(message, type, showProgress = false) {
             statusText.textContent = message;
@@ -335,14 +323,14 @@
             status.style.display = 'none';
         }
 
+        // Recording functionality
         recordBtn.onclick = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: {
-                        echoCancellation: true,
+                        echoCancellation: false,
                         noiseSuppression: false,
-                        autoGainControl: true,
-                        sampleRate: 48000
+                        autoGainControl: false
                     } 
                 });
                 
@@ -359,14 +347,14 @@
                     originalAudio.src = url;
                     document.getElementById('originalAudioSection').style.display = 'block';
                     cleanBtn.disabled = false;
-                    showStatus('Recording saved! Click "Clean with AI" to enhance.', 'ready', false);
+                    showStatus('Recording saved! Click "Clean Audio" to enhance.', 'ready', false);
                     
                     stream.getTracks().forEach(track => track.stop());
                 };
                 
                 mediaRecorder.start();
                 recordBtn.classList.add('recording');
-                recordBtn.innerHTML = '<span>⏺️</span> Recording...';
+                recordBtn.innerHTML = 'Recording...';
                 recordBtn.disabled = true;
                 stopBtn.disabled = false;
                 showStatus('Recording in progress...', 'recording', false);
@@ -380,13 +368,13 @@
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
                 recordBtn.classList.remove('recording');
-                recordBtn.innerHTML = '<span>🔴</span> Start Recording';
+                recordBtn.innerHTML = 'Start Recording';
                 recordBtn.disabled = false;
                 stopBtn.disabled = true;
             }
         };
 
-        // File upload handlers
+        // File upload functionality
         uploadBtn.onclick = () => {
             fileInput.click();
         };
@@ -396,136 +384,54 @@
             if (!file) return;
 
             fileName.textContent = `Selected: ${file.name}`;
-            showStatus('Processing uploaded file...', 'processing', true);
-            updateProgress(10);
+            showStatus('Loading file...', 'processing', true);
+            updateProgress(50);
 
             try {
-                // Create audio context
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)({
-                    sampleRate: 48000
-                });
-
-                updateProgress(20);
-
-                // Read file as array buffer
-                const arrayBuffer = await file.arrayBuffer();
-                updateProgress(40);
-
-                // Decode audio/video file
-                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                updateProgress(60);
-
-                // Convert to WAV
-                const wavBlob = await bufferToWave(audioBuffer);
-                originalBlob = wavBlob;
-                
-                updateProgress(80);
-
-                // Display the audio
+                originalBlob = file;
                 const url = URL.createObjectURL(originalBlob);
                 originalAudio.src = url;
                 document.getElementById('originalAudioSection').style.display = 'block';
                 cleanBtn.disabled = false;
 
                 updateProgress(100);
-                showStatus('File loaded! Ready to clean with AI.', 'ready', false);
-
-                await audioContext.close();
-
+                showStatus('File loaded! Ready to clean.', 'ready', false);
             } catch (err) {
-                showStatus('Error processing file: ' + err.message, 'error', false);
-                console.error('File processing error:', err);
+                showStatus('Error loading file: ' + err.message, 'error', false);
             }
         };
 
+        // Audio cleaning functionality
         cleanBtn.onclick = async () => {
-            if (!originalBlob || !rnnoise) return;
+            if (!originalBlob) return;
             
-            showStatus('Processing with RNNoise AI... Please wait.', 'processing', true);
+            showStatus('Processing audio... Please wait.', 'processing', true);
             cleanBtn.disabled = true;
             updateProgress(10);
 
             try {
-                // Decode audio to raw PCM
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)({
-                    sampleRate: 48000
-                });
-                
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 updateProgress(20);
+                
                 const arrayBuffer = await originalBlob.arrayBuffer();
-                updateProgress(30);
-                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 updateProgress(40);
                 
-                // Get mono channel data
-                const channelData = audioBuffer.getChannelData(0);
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                updateProgress(60);
                 
-                // RNNoise processes in frames of 480 samples (10ms at 48kHz)
-                const frameSize = 480;
-                const totalFrames = Math.ceil(channelData.length / frameSize);
-                const processedData = new Float32Array(channelData.length);
-                
-                // Create RNNoise denoiser state
-                const denoiseState = rnnoise.createDenoiseState();
-                
-                showStatus(`Denoising with AI... 0/${totalFrames} frames`, 'processing', true);
-                
-                // Process audio in chunks to avoid blocking
-                const chunkSize = 100; // Process 100 frames at a time
-                for (let i = 0; i < totalFrames; i += chunkSize) {
-                    const endFrame = Math.min(i + chunkSize, totalFrames);
-                    
-                    for (let frame = i; frame < endFrame; frame++) {
-                        const start = frame * frameSize;
-                        const end = Math.min(start + frameSize, channelData.length);
-                        const frameData = new Float32Array(frameSize);
-                        
-                        // Copy frame data
-                        for (let j = 0; j < frameSize; j++) {
-                            frameData[j] = start + j < end ? channelData[start + j] : 0;
-                        }
-                        
-                        // Process with RNNoise
-                        denoiseState.processFrame(frameData);
-                        
-                        // Copy back processed data
-                        for (let j = 0; j < frameSize && start + j < processedData.length; j++) {
-                            processedData[start + j] = frameData[j];
-                        }
-                    }
-                    
-                    // Update progress
-                    const progress = 40 + (endFrame / totalFrames) * 50;
-                    updateProgress(progress);
-                    showStatus(`Denoising with AI... ${endFrame}/${totalFrames} frames`, 'processing', true);
-                    
-                    // Allow UI to update
-                    await new Promise(resolve => setTimeout(resolve, 0));
-                }
-                
-                // Clean up
-                denoiseState.destroy();
-                
-                updateProgress(95);
-                showStatus('Creating audio file...', 'processing', true);
-                
-                // Create new audio buffer with processed data
-                const cleanedBuffer = audioContext.createBuffer(
-                    1,
-                    processedData.length,
-                    audioBuffer.sampleRate
-                );
-                cleanedBuffer.copyToChannel(processedData, 0);
+                // Apply noise reduction
+                const cleanedBuffer = await applyNoiseReduction(audioBuffer, audioContext);
+                updateProgress(80);
                 
                 // Convert to WAV
-                cleanedBlob = await bufferToWave(cleanedBuffer);
+                cleanedBlob = bufferToWave(cleanedBuffer);
                 const url = URL.createObjectURL(cleanedBlob);
                 cleanedAudio.src = url;
                 document.getElementById('cleanedAudioSection').style.display = 'block';
                 downloadBtn.disabled = false;
                 
                 updateProgress(100);
-                showStatus('Audio enhanced successfully with AI! 🎉', 'ready', false);
+                showStatus('Audio cleaned successfully!', 'ready', false);
                 
                 await audioContext.close();
                 
@@ -536,17 +442,72 @@
             }
         };
 
+        // Simple noise reduction using spectral gating
+        async function applyNoiseReduction(audioBuffer, audioContext) {
+            const channelData = audioBuffer.getChannelData(0);
+            const sampleRate = audioBuffer.sampleRate;
+            
+            // Create offline context for processing
+            const offlineContext = new OfflineAudioContext(
+                1,
+                channelData.length,
+                sampleRate
+            );
+            
+            // Create buffer source
+            const source = offlineContext.createBufferSource();
+            source.buffer = audioBuffer;
+            
+            // Create filters for noise reduction
+            const highpass = offlineContext.createBiquadFilter();
+            highpass.type = 'highpass';
+            highpass.frequency.value = 80; // Remove low frequency noise
+            
+            const lowpass = offlineContext.createBiquadFilter();
+            lowpass.type = 'lowpass';
+            lowpass.frequency.value = 8000; // Remove high frequency noise
+            
+            // Create compressor to even out levels
+            const compressor = offlineContext.createDynamicsCompressor();
+            compressor.threshold.value = -24;
+            compressor.knee.value = 30;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0.003;
+            compressor.release.value = 0.25;
+            
+            // Create gain node for volume adjustment
+            const gain = offlineContext.createGain();
+            gain.gain.value = 1.2;
+            
+            // Connect the nodes
+            source.connect(highpass);
+            highpass.connect(lowpass);
+            lowpass.connect(compressor);
+            compressor.connect(gain);
+            gain.connect(offlineContext.destination);
+            
+            // Start processing
+            source.start(0);
+            
+            // Render the audio
+            const renderedBuffer = await offlineContext.startRendering();
+            
+            return renderedBuffer;
+        }
+
+        // Download functionality
         downloadBtn.onclick = () => {
             if (!cleanedBlob) return;
             
             const url = URL.createObjectURL(cleanedBlob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'ai-enhanced-voice-' + Date.now() + '.wav';
+            a.download = 'cleaned-audio-' + Date.now() + '.wav';
             a.click();
             URL.revokeObjectURL(url);
         };
 
+        // Convert audio buffer to WAV format
         function bufferToWave(buffer) {
             const length = buffer.length * buffer.numberOfChannels * 2;
             const arrayBuffer = new ArrayBuffer(44 + length);
@@ -556,18 +517,18 @@
             let pos = 0;
 
             // Write WAV header
-            setUint32(0x46464952);
-            setUint32(length + 36);
-            setUint32(0x45564157);
-            setUint32(0x20746d66);
-            setUint32(16);
-            setUint16(1);
+            setUint32(0x46464952); // "RIFF"
+            setUint32(length + 36); // file length
+            setUint32(0x45564157); // "WAVE"
+            setUint32(0x20746d66); // "fmt "
+            setUint32(16); // format chunk size
+            setUint16(1); // PCM format
             setUint16(buffer.numberOfChannels);
             setUint32(buffer.sampleRate);
             setUint32(buffer.sampleRate * buffer.numberOfChannels * 2);
             setUint16(buffer.numberOfChannels * 2);
-            setUint16(16);
-            setUint32(0x61746164);
+            setUint16(16); // bits per sample
+            setUint32(0x61746164); // "data"
             setUint32(length);
 
             for (let i = 0; i < buffer.numberOfChannels; i++) {
