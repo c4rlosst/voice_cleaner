@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Voice Recording Cleaner - Professional Noise Removal</title>
+    <title>AI Voice Cleaner - Local Processing</title>
     <style>
         * {
             margin: 0;
@@ -26,7 +26,7 @@
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
         }
 
@@ -34,7 +34,6 @@
             color: #333;
             margin-bottom: 10px;
             text-align: center;
-            font-size: 28px;
         }
 
         .subtitle {
@@ -47,12 +46,11 @@
         .info-box {
             background: #e7f3ff;
             border-left: 4px solid #667eea;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 20px;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 13px;
             color: #333;
-            line-height: 1.5;
         }
 
         .upload-section {
@@ -76,6 +74,16 @@
             color: white;
             margin: 0 auto;
             display: inline-flex;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-upload:hover:not(:disabled) {
@@ -183,7 +191,6 @@
             color: #555;
             margin-bottom: 8px;
             display: block;
-            font-size: 14px;
         }
 
         audio {
@@ -194,7 +201,7 @@
 
         .status {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -222,11 +229,11 @@
 
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #e9ecef;
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .progress-fill {
@@ -236,155 +243,48 @@
             transition: width 0.3s;
         }
 
-        .model-selector {
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .model-selector select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-top: 5px;
-            background: white;
-        }
-
-        .strength-controls {
-            display: flex;
-            gap: 15px;
-            margin: 15px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .slider-container {
-            flex: 1;
-        }
-
-        .slider-container label {
-            display: block;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .slider-value {
-            font-size: 12px;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #e0e0e0;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #667eea;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .waveform-container {
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .waveform {
-            width: 100%;
-            height: 80px;
-            background: #f0f0f0;
+        .permission-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-bottom: 20px;
             border-radius: 4px;
-            position: relative;
-            overflow: hidden;
+            font-size: 13px;
+            color: #856404;
         }
 
-        .waveform-bar {
-            position: absolute;
-            bottom: 0;
-            width: 2px;
-            background: #667eea;
-            border-radius: 1px;
-        }
-
-        .noise-profile {
-            margin-top: 10px;
+        .supported-formats {
             font-size: 12px;
             color: #666;
-        }
-
-        .comparison {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .comparison-item {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            font-size: 12px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎤 AI Voice Cleaner Pro</h1>
-        <p class="subtitle">Professional-grade voice isolation & noise removal using AI</p>
+        <h1>🎤 AI Voice Cleaner</h1>
+        <p class="subtitle">Record or upload audio for AI-powered noise reduction</p>
 
         <div class="info-box">
-            <strong>🚀 Advanced AI Processing:</strong> Uses Spleeter (Deezer's AI) for vocal isolation, 
-            WebRTC VAD for voice detection, and advanced spectral processing. All processing happens locally in your browser.
+            <strong>100% Local Processing:</strong> All audio processing happens in your browser. No files are uploaded to any server. Your privacy is guaranteed.
+        </div>
+
+        <div class="permission-info">
+            <strong>⚠️ Permission Required:</strong> Allow microphone access when prompted. This is needed for recording.
         </div>
 
         <div class="upload-section">
             <label for="fileInput" class="upload-label">
-                Upload audio/video file (MP3, WAV, M4A, OGG, WebM)
+                Upload audio file (MP3, WAV, M4A, OGG, WebM)
             </label>
-            <input type="file" id="fileInput" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.webm" style="display: none;">
+            <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.ogg,.webm,audio/*" style="display: none;">
             <button id="uploadBtn" class="btn-upload">
-                📁 Choose File
+                📁 Choose Audio File
             </button>
+            <div class="supported-formats">
+                Supported: MP3, WAV, M4A, OGG, WebM (max 50MB)
+            </div>
             <div id="fileName" class="file-name"></div>
-        </div>
-
-        <div class="model-selector">
-            <label>AI Model:</label>
-            <select id="modelSelect">
-                <option value="vad">WebRTC VAD + Spectral</option>
-                <option value="spleeter">Spleeter (Vocal Isolation)</option>
-                <option value="denoise">Deep Denoiser</option>
-                <option value="hybrid">Hybrid AI Model</option>
-            </select>
-        </div>
-
-        <div class="strength-controls">
-            <div class="slider-container">
-                <label>Noise Reduction <span id="noiseValue" class="slider-value">95%</span></label>
-                <input type="range" id="noiseReduction" min="70" max="100" value="95" step="5">
-            </div>
-            <div class="slider-container">
-                <label>Voice Clarity <span id="voiceValue" class="slider-value">85%</span></label>
-                <input type="range" id="voiceEnhancement" min="50" max="100" value="85" step="5">
-            </div>
         </div>
 
         <div id="status" class="status" style="display: none;">
@@ -399,40 +299,37 @@
                 🎤 Start Recording
             </button>
             <button id="stopBtn" class="btn-stop" disabled>
-                ⏹️ Stop
+                ⏹️ Stop Recording
             </button>
             <button id="cleanBtn" class="btn-clean" disabled>
                 ✨ Clean Audio
             </button>
             <button id="downloadBtn" class="btn-download" disabled>
-                💾 Download
+                💾 Download Cleaned
             </button>
         </div>
 
         <div class="audio-section">
             <div id="originalAudioSection" style="display: none;" class="audio-wrapper">
-                <span class="audio-label">Original Recording</span>
+                <span class="audio-label">Original Audio</span>
                 <audio id="originalAudio" controls></audio>
             </div>
 
             <div id="cleanedAudioSection" style="display: none;" class="audio-wrapper">
-                <span class="audio-label">🎧 Cleaned Recording (AI Enhanced)</span>
+                <span class="audio-label">🎧 Cleaned Audio</span>
                 <audio id="cleanedAudio" controls></audio>
             </div>
         </div>
     </div>
 
-    <!-- Load TensorFlow.js and other required libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@3.15.0/dist/tf-backend-wasm.js"></script>
-    
     <script>
-        let mediaRecorder;
+        // Simple state management
+        let mediaRecorder = null;
         let audioChunks = [];
-        let originalBlob;
-        let cleanedBlob;
-        let tfModel = null;
-        let noiseProfile = null;
+        let originalBlob = null;
+        let cleanedBlob = null;
+        let isRecording = false;
+        let stream = null;
 
         // DOM Elements
         const recordBtn = document.getElementById('recordBtn');
@@ -448,16 +345,8 @@
         const statusText = document.getElementById('statusText');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
-        const noiseReductionSlider = document.getElementById('noiseReduction');
-        const voiceEnhancementSlider = document.getElementById('voiceEnhancement');
-        const noiseValue = document.getElementById('noiseValue');
-        const voiceValue = document.getElementById('voiceValue');
-        const modelSelect = document.getElementById('modelSelect');
 
-        // Update slider values
-        noiseReductionSlider.oninput = () => noiseValue.textContent = noiseReductionSlider.value + '%';
-        voiceEnhancementSlider.oninput = () => voiceValue.textContent = voiceEnhancementSlider.value + '%';
-
+        // Status functions
         function showStatus(message, type, showProgress = false) {
             statusText.textContent = message;
             status.className = 'status ' + type;
@@ -469,290 +358,238 @@
             progressFill.style.width = percent + '%';
         }
 
-        // Initialize TensorFlow.js with WASM backend for better performance
-        async function initTF() {
-            try {
-                showStatus('Initializing AI engine...', 'processing', true);
-                updateProgress(20);
-                
-                // Set backend to WASM for better performance
-                await tf.setBackend('wasm');
-                await tf.ready();
-                
-                updateProgress(100);
-                console.log('TensorFlow.js initialized with backend:', tf.getBackend());
-                return true;
-            } catch (error) {
-                console.warn('TensorFlow initialization failed:', error);
-                showStatus('Using JavaScript processing', 'ready', false);
+        function hideStatus() {
+            status.style.display = 'none';
+        }
+
+        // Check browser compatibility
+        function checkCompatibility() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showStatus('Your browser does not support audio recording. Please use Chrome, Firefox, or Edge.', 'error');
+                recordBtn.disabled = true;
                 return false;
             }
-        }
-
-        // Enhanced Voice Activity Detection using WebRTC VAD algorithm
-        class EnhancedVAD {
-            constructor(sampleRate = 16000) {
-                this.sampleRate = sampleRate;
-                this.frameSize = 160; // 10ms at 16kHz
-                this.threshold = 0.3;
-                this.noiseProfile = new Float32Array(129); // For spectral subtraction
-            }
-
-            // Calculate energy of audio frame
-            calculateEnergy(frame) {
-                let energy = 0;
-                for (let i = 0; i < frame.length; i++) {
-                    energy += frame[i] * frame[i];
-                }
-                return Math.sqrt(energy / frame.length);
-            }
-
-            // Zero-crossing rate (noise indicator)
-            calculateZCR(frame) {
-                let crossings = 0;
-                for (let i = 1; i < frame.length; i++) {
-                    if ((frame[i-1] * frame[i]) < 0) {
-                        crossings++;
-                    }
-                }
-                return crossings / frame.length;
-            }
-
-            // Spectral features for better voice detection
-            calculateSpectralFeatures(frame) {
-                const fftSize = 256;
-                const frequencies = [];
-                const amplitudes = [];
-                
-                // Simple FFT-like calculation (simplified)
-                for (let freq = 0; freq < 129; freq++) {
-                    let real = 0;
-                    let imag = 0;
-                    for (let n = 0; n < frame.length; n++) {
-                        const angle = 2 * Math.PI * freq * n / fftSize;
-                        real += frame[n] * Math.cos(angle);
-                        imag += frame[n] * Math.sin(angle);
-                    }
-                    const amplitude = Math.sqrt(real*real + imag*imag) / frame.length;
-                    frequencies.push(freq * this.sampleRate / fftSize);
-                    amplitudes.push(amplitude);
-                }
-                
-                return { frequencies, amplitudes };
-            }
-
-            // Detect voice using multiple features
-            isVoice(frame) {
-                const energy = this.calculateEnergy(frame);
-                const zcr = this.calculateZCR(frame);
-                const spectral = this.calculateSpectralFeatures(frame);
-                
-                // Voice typically has energy in 300-3400Hz range
-                let voiceBandEnergy = 0;
-                for (let i = 0; i < spectral.frequencies.length; i++) {
-                    const freq = spectral.frequencies[i];
-                    if (freq >= 300 && freq <= 3400) {
-                        voiceBandEnergy += spectral.amplitudes[i];
-                    }
-                }
-                
-                const voiceRatio = voiceBandEnergy / (energy + 0.001);
-                
-                // Voice detection logic
-                return energy > 0.01 && 
-                       zcr < 0.3 && 
-                       voiceRatio > 0.4;
-            }
-
-            // Generate noise profile from silent segments
-            updateNoiseProfile(frame) {
-                if (!this.isVoice(frame)) {
-                    const spectral = this.calculateSpectralFeatures(frame);
-                    for (let i = 0; i < this.noiseProfile.length; i++) {
-                        this.noiseProfile[i] = 0.9 * this.noiseProfile[i] + 0.1 * spectral.amplitudes[i];
-                    }
-                }
-                return this.noiseProfile;
-            }
-        }
-
-        // Enhanced spectral subtraction with noise profile
-        function spectralSubtraction(audioData, sampleRate, strength) {
-            const vad = new EnhancedVAD(sampleRate);
-            const frameSize = 1024;
-            const hopSize = frameSize / 4;
-            const output = new Float32Array(audioData.length);
             
-            // Process in overlapping frames
-            for (let i = 0; i < audioData.length - frameSize; i += hopSize) {
-                const frame = audioData.slice(i, i + frameSize);
-                
-                // Update noise profile
-                const noiseProfile = vad.updateNoiseProfile(frame);
-                
-                // Get spectral features
-                const spectral = vad.calculateSpectralFeatures(frame);
-                
-                // Apply spectral subtraction
-                for (let j = 0; j < spectral.amplitudes.length; j++) {
-                    const noiseEstimate = noiseProfile[j] * strength;
-                    const cleanMagnitude = Math.max(0, spectral.amplitudes[j] - noiseEstimate);
-                    const gain = cleanMagnitude / (spectral.amplitudes[j] + 0.001);
-                    
-                    // Apply to frequency bins
-                    const freqIndex = j * 2;
-                    // This is simplified - real implementation would use complex FFT
-                    output[i + j] = frame[j] * gain;
-                }
+            if (!window.MediaRecorder) {
+                showStatus('Your browser does not support MediaRecorder API. Please update your browser.', 'error');
+                recordBtn.disabled = true;
+                return false;
             }
             
-            return output;
+            return true;
         }
 
-        // Recording functionality
-        recordBtn.onclick = async () => {
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            checkCompatibility();
+            showStatus('Ready to record or upload audio!', 'ready');
+        });
+
+        // File upload functionality - FIXED
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Check file size (max 50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                showStatus('File is too large. Please choose a file smaller than 50MB.', 'error');
+                return;
+            }
+
+            // Check file type
+            const validTypes = ['audio/mp3', 'audio/wav', 'audio/mpeg', 'audio/ogg', 'audio/webm', 'audio/m4a', 'audio/x-m4a'];
+            if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|m4a|ogg|webm)$/i)) {
+                showStatus('Please select a valid audio file (MP3, WAV, M4A, OGG, or WebM).', 'error');
+                return;
+            }
+
+            fileName.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            showStatus('Loading file...', 'processing', true);
+            updateProgress(30);
+
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
+                originalBlob = file;
+                const url = URL.createObjectURL(file);
+                originalAudio.src = url;
+                
+                // Ensure audio is loaded
+                originalAudio.onloadeddata = () => {
+                    document.getElementById('originalAudioSection').style.display = 'block';
+                    cleanBtn.disabled = false;
+                    updateProgress(100);
+                    showStatus('File loaded successfully! Ready to clean.', 'ready', false);
+                };
+                
+                originalAudio.onerror = () => {
+                    showStatus('Error loading audio file. Please try a different file.', 'error', false);
+                };
+
+            } catch (err) {
+                console.error('File loading error:', err);
+                showStatus('Error loading file: ' + err.message, 'error', false);
+            }
+        });
+
+        // Recording functionality - FIXED
+        recordBtn.addEventListener('click', async () => {
+            if (isRecording) return;
+            
+            try {
+                showStatus('Requesting microphone access...', 'processing');
+                
+                // Get microphone permission
+                stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: {
                         echoCancellation: true,
                         noiseSuppression: true,
                         autoGainControl: true,
-                        channelCount: 1,
-                        sampleRate: 44100
+                        sampleRate: 44100,
+                        channelCount: 1
                     } 
                 });
                 
+                // Reset chunks
                 audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'audio/webm;codecs=opus'
-                });
                 
-                mediaRecorder.ondataavailable = (e) => {
-                    audioChunks.push(e.data);
+                // Create MediaRecorder with options that work across browsers
+                const options = { mimeType: 'audio/webm' };
+                
+                // Try different mimeTypes for cross-browser compatibility
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    options.mimeType = 'audio/webm;codecs=opus';
+                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    options.mimeType = 'audio/mp4';
+                } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+                    options.mimeType = 'audio/ogg;codecs=opus';
+                }
+                
+                mediaRecorder = new MediaRecorder(stream, options);
+                
+                // Handle data available
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
                 };
                 
+                // Handle recording stop
                 mediaRecorder.onstop = () => {
-                    originalBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const url = URL.createObjectURL(originalBlob);
-                    originalAudio.src = url;
-                    document.getElementById('originalAudioSection').style.display = 'block';
-                    cleanBtn.disabled = false;
-                    showStatus('Recording saved! Click "Clean Audio" to enhance.', 'ready', false);
+                    if (audioChunks.length > 0) {
+                        originalBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                        const url = URL.createObjectURL(originalBlob);
+                        originalAudio.src = url;
+                        document.getElementById('originalAudioSection').style.display = 'block';
+                        cleanBtn.disabled = false;
+                        
+                        showStatus('Recording saved! Ready to clean.', 'ready');
+                    }
                     
-                    stream.getTracks().forEach(track => track.stop());
+                    // Stop all tracks
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        stream = null;
+                    }
+                    
+                    isRecording = false;
                 };
                 
-                mediaRecorder.start();
+                // Handle errors
+                mediaRecorder.onerror = (event) => {
+                    console.error('MediaRecorder error:', event.error);
+                    showStatus('Recording error: ' + event.error.name, 'error');
+                    
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        stream = null;
+                    }
+                    
+                    isRecording = false;
+                    resetRecordingUI();
+                };
+                
+                // Start recording
+                mediaRecorder.start(100); // Collect data every 100ms
+                isRecording = true;
+                
+                // Update UI
                 recordBtn.classList.add('recording');
                 recordBtn.innerHTML = '🔴 Recording...';
                 recordBtn.disabled = true;
                 stopBtn.disabled = false;
-                showStatus('Recording in progress... Speak clearly into your microphone.', 'recording', false);
+                
+                showStatus('Recording in progress... Speak into your microphone.', 'recording');
                 
             } catch (err) {
-                showStatus('Error accessing microphone: ' + err.message, 'error', false);
+                console.error('Recording error:', err);
+                
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    showStatus('Microphone access denied. Please allow microphone access in your browser settings.', 'error');
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                    showStatus('No microphone found. Please connect a microphone and try again.', 'error');
+                } else if (err.name === 'NotSupportedError') {
+                    showStatus('Your browser does not support audio recording.', 'error');
+                } else {
+                    showStatus('Error accessing microphone: ' + err.message, 'error');
+                }
+                
+                resetRecordingUI();
             }
-        };
+        });
 
-        stopBtn.onclick = () => {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        // Stop recording
+        stopBtn.addEventListener('click', () => {
+            if (mediaRecorder && isRecording) {
                 mediaRecorder.stop();
-                recordBtn.classList.remove('recording');
-                recordBtn.innerHTML = '🎤 Start Recording';
-                recordBtn.disabled = false;
-                stopBtn.disabled = true;
+                resetRecordingUI();
+                showStatus('Recording stopped. Processing...', 'processing');
             }
-        };
+        });
 
-        // File upload functionality
-        uploadBtn.onclick = () => {
-            fileInput.click();
-        };
+        function resetRecordingUI() {
+            isRecording = false;
+            recordBtn.classList.remove('recording');
+            recordBtn.innerHTML = '🎤 Start Recording';
+            recordBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
 
-        fileInput.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            fileName.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-            showStatus('Loading file...', 'processing', true);
-            updateProgress(50);
-
-            try {
-                originalBlob = file;
-                const url = URL.createObjectURL(originalBlob);
-                originalAudio.src = url;
-                document.getElementById('originalAudioSection').style.display = 'block';
-                cleanBtn.disabled = false;
-
-                updateProgress(100);
-                showStatus('File loaded! Ready to clean.', 'ready', false);
-            } catch (err) {
-                showStatus('Error loading file: ' + err.message, 'error', false);
+        // Clean audio functionality
+        cleanBtn.addEventListener('click', async () => {
+            if (!originalBlob) {
+                showStatus('Please record or upload audio first.', 'error');
+                return;
             }
-        };
-
-        // Main audio cleaning function with AI models
-        cleanBtn.onclick = async () => {
-            if (!originalBlob) return;
             
-            showStatus('Processing audio with AI... This may take a moment.', 'processing', true);
+            showStatus('Cleaning audio... This may take a moment.', 'processing', true);
             cleanBtn.disabled = true;
-            downloadBtn.disabled = true;
             updateProgress(10);
 
             try {
-                // Initialize TensorFlow
-                const tfReady = await initTF();
+                // Create audio context
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 updateProgress(20);
                 
-                // Create audio context
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)({
-                    sampleRate: 44100
-                });
-                
-                // Decode audio data
+                // Convert blob to array buffer
                 const arrayBuffer = await originalBlob.arrayBuffer();
                 updateProgress(40);
                 
+                // Decode audio data
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 updateProgress(60);
                 
-                console.log('Processing audio:', audioBuffer.duration, 'seconds');
+                console.log('Processing audio:', {
+                    duration: audioBuffer.duration,
+                    sampleRate: audioBuffer.sampleRate,
+                    channels: audioBuffer.numberOfChannels
+                });
                 
-                // Get processing parameters
-                const model = modelSelect.value;
-                const noiseStrength = noiseReductionSlider.value / 100;
-                const voiceStrength = voiceEnhancementSlider.value / 100;
-                
-                updateProgress(70);
-                
-                // Process with selected AI model
-                let cleanedBuffer;
-                switch (model) {
-                    case 'vad':
-                        cleanedBuffer = await processWithVAD(audioBuffer, audioContext, noiseStrength);
-                        break;
-                    case 'spleeter':
-                        cleanedBuffer = await processWithSpleeterStyle(audioBuffer, audioContext, noiseStrength);
-                        break;
-                    case 'denoise':
-                        cleanedBuffer = await processWithDeepDenoiser(audioBuffer, audioContext, noiseStrength);
-                        break;
-                    case 'hybrid':
-                        cleanedBuffer = await processWithHybridAI(audioBuffer, audioContext, noiseStrength);
-                        break;
-                    default:
-                        cleanedBuffer = await processWithVAD(audioBuffer, audioContext, noiseStrength);
-                }
-                
+                // Process audio (simplified - you can add your processing logic here)
+                const cleanedBuffer = await processAudio(audioBuffer, audioContext);
                 updateProgress(80);
-                
-                // Apply voice enhancement
-                if (voiceStrength > 0) {
-                    cleanedBuffer = await enhanceVoice(cleanedBuffer, audioContext, voiceStrength);
-                }
-                
-                updateProgress(90);
                 
                 // Convert to WAV
                 cleanedBlob = bufferToWave(cleanedBuffer);
@@ -760,298 +597,120 @@
                 cleanedAudio.src = url;
                 document.getElementById('cleanedAudioSection').style.display = 'block';
                 downloadBtn.disabled = false;
-                cleanBtn.disabled = false;
                 
                 updateProgress(100);
-                showStatus('✅ Audio cleaned successfully! Background noise removed.', 'ready', false);
+                showStatus('Audio cleaned successfully!', 'ready', false);
                 
+                // Close audio context
                 await audioContext.close();
                 
             } catch (err) {
-                showStatus('Error: ' + err.message, 'error', false);
+                console.error('Cleaning error:', err);
+                showStatus('Error cleaning audio: ' + err.message, 'error');
                 cleanBtn.disabled = false;
-                console.error('Processing error:', err);
             }
-        };
+        });
 
-        // Process with VAD + Spectral Subtraction
-        async function processWithVAD(audioBuffer, audioContext, strength) {
-            showStatus('Running Voice Activity Detection...', 'processing', true);
-            
-            const channelData = audioBuffer.getChannelData(0);
-            const sampleRate = audioBuffer.sampleRate;
-            
-            // Resample to 16kHz for better VAD performance
-            const resampledData = resampleAudioData(channelData, sampleRate, 16000);
-            
-            // Create VAD processor
-            const vad = new EnhancedVAD(16000);
-            const frameSize = 160; // 10ms at 16kHz
-            const vadResult = new Float32Array(resampledData.length);
-            
-            // Apply VAD and noise reduction
-            for (let i = 0; i < resampledData.length - frameSize; i += frameSize) {
-                const frame = resampledData.slice(i, i + frameSize);
-                const isVoice = vad.isVoice(frame);
-                
-                if (isVoice) {
-                    // Keep voice frame
-                    for (let j = 0; j < frameSize; j++) {
-                        vadResult[i + j] = frame[j];
-                    }
-                } else {
-                    // Reduce noise in non-voice frames
-                    for (let j = 0; j < frameSize; j++) {
-                        vadResult[i + j] = frame[j] * (1 - strength);
-                    }
-                }
-            }
-            
-            // Resample back to original sample rate
-            const processedData = resampleAudioData(vadResult, 16000, sampleRate);
-            
-            // Apply spectral subtraction on full audio
-            const finalData = spectralSubtraction(processedData, sampleRate, strength);
-            
-            // Create output buffer
-            const outputBuffer = audioContext.createBuffer(1, finalData.length, sampleRate);
-            outputBuffer.copyToChannel(finalData, 0);
-            
-            return outputBuffer;
-        }
-
-        // Spleeter-style vocal isolation (simplified implementation)
-        async function processWithSpleeterStyle(audioBuffer, audioContext, strength) {
-            showStatus('Separating vocals from background...', 'processing', true);
-            
-            const channelData = audioBuffer.getChannelData(0);
-            const sampleRate = audioBuffer.sampleRate;
-            const length = channelData.length;
-            
-            // Create masks for different frequency bands (simulating source separation)
-            const vocalMask = new Float32Array(length);
-            const backgroundMask = new Float32Array(length);
-            
-            // Simple frequency-based masking (real Spleeter uses neural networks)
-            const frameSize = 2048;
-            const hopSize = frameSize / 4;
-            
-            for (let i = 0; i < length - frameSize; i += hopSize) {
-                const frame = channelData.slice(i, i + frameSize);
-                
-                // Calculate spectral content
-                const spectral = calculateSpectralContent(frame);
-                
-                // Create masks based on frequency distribution
-                // Voice typically dominates 85-255 Hz (fundamental) and 1000-4000 Hz (formants)
-                let voiceEnergy = 0;
-                let totalEnergy = 0;
-                
-                for (let j = 0; j < spectral.length; j++) {
-                    const freq = j * sampleRate / (2 * spectral.length);
-                    const amplitude = spectral[j];
-                    totalEnergy += amplitude;
-                    
-                    if ((freq >= 85 && freq <= 255) || (freq >= 1000 && freq <= 4000)) {
-                        voiceEnergy += amplitude;
-                    }
-                }
-                
-                const voiceRatio = voiceEnergy / (totalEnergy + 0.001);
-                
-                // Apply masks
-                for (let j = 0; j < hopSize; j++) {
-                    const idx = i + j;
-                    vocalMask[idx] = frame[j] * voiceRatio * strength;
-                    backgroundMask[idx] = frame[j] * (1 - voiceRatio) * (1 - strength);
-                }
-            }
-            
-            // Combine with original (vocals enhanced, background reduced)
-            const outputData = new Float32Array(length);
-            for (let i = 0; i < length; i++) {
-                outputData[i] = vocalMask[i] + (backgroundMask[i] * 0.1); // Reduce background
-            }
-            
-            // Create output buffer
-            const outputBuffer = audioContext.createBuffer(1, length, sampleRate);
-            outputBuffer.copyToChannel(outputData, 0);
-            
-            return outputBuffer;
-        }
-
-        // Deep Denoiser style processing
-        async function processWithDeepDenoiser(audioBuffer, audioContext, strength) {
-            showStatus('Applying deep learning denoising...', 'processing', true);
-            
-            const channelData = audioBuffer.getChannelData(0);
-            const sampleRate = audioBuffer.sampleRate;
-            const length = channelData.length;
-            
-            // Create output buffer with advanced processing
-            const offlineContext = new OfflineAudioContext(
-                1,
-                length,
-                sampleRate
-            );
-            
-            const source = offlineContext.createBufferSource();
-            source.buffer = audioBuffer;
-            
-            // Multi-band processing for better noise reduction
-            const splitter = offlineContext.createChannelSplitter(1);
-            const merger = offlineContext.createChannelMerger(1);
-            
-            // Process different frequency bands separately
-            const bands = [
-                { type: 'lowpass', freq: 300, gain: 0.1 * strength },   // Sub-bass (mostly noise)
-                { type: 'bandpass', freq: 500, gain: 0.8 * strength },  // Voice fundamental
-                { type: 'bandpass', freq: 1500, gain: 1.0 * strength }, // Voice formants
-                { type: 'bandpass', freq: 3000, gain: 0.9 * strength }, // Voice clarity
-                { type: 'highpass', freq: 5000, gain: 0.3 * strength }  // High frequencies
-            ];
-            
-            let lastNode = source;
-            
-            bands.forEach((band, idx) => {
-                const filter = offlineContext.createBiquadFilter();
-                filter.type = band.type;
-                filter.frequency.value = band.freq;
-                
-                const gainNode = offlineContext.createGain();
-                gainNode.gain.value = band.gain;
-                
-                lastNode.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(merger, 0, idx);
-                
-                lastNode = filter;
-            });
-            
-            // Add noise gate
-            const noiseGate = offlineContext.createDynamicsCompressor();
-            noiseGate.threshold.value = -50 + (strength * 30);
-            noiseGate.knee.value = 5;
-            noiseGate.ratio.value = 20;
-            noiseGate.attack.value = 0.001;
-            noiseGate.release.value = 0.05;
-            
-            merger.connect(noiseGate);
-            noiseGate.connect(offlineContext.destination);
-            
-            source.start(0);
-            const renderedBuffer = await offlineContext.startRendering();
-            
-            return renderedBuffer;
-        }
-
-        // Hybrid AI processing combining multiple techniques
-        async function processWithHybridAI(audioBuffer, audioContext, strength) {
-            showStatus('Running hybrid AI processing...', 'processing', true);
-            
-            // Step 1: Apply VAD-based noise reduction
-            const vadResult = await processWithVAD(audioBuffer, audioContext, strength * 0.6);
-            
-            // Step 2: Apply spectral enhancement
-            const spectralResult = await processWithDeepDenoiser(vadResult, audioContext, strength * 0.4);
-            
-            return spectralResult;
-        }
-
-        // Voice enhancement
-        async function enhanceVoice(audioBuffer, audioContext, strength) {
+        // Audio processing function
+        async function processAudio(audioBuffer, audioContext) {
+            // Create offline context for processing
             const offlineContext = new OfflineAudioContext(
                 audioBuffer.numberOfChannels,
                 audioBuffer.length,
                 audioBuffer.sampleRate
             );
             
+            // Create buffer source
             const source = offlineContext.createBufferSource();
             source.buffer = audioBuffer;
             
-            // Create enhancement chain
-            const input = offlineContext.createGain();
-            const output = offlineContext.createGain();
+            // Apply noise reduction filters
+            const filters = createNoiseReductionChain(offlineContext);
             
-            // Presence boost
-            const presence = offlineContext.createBiquadFilter();
+            // Connect processing chain
+            source.connect(filters.input);
+            filters.output.connect(offlineContext.destination);
+            
+            // Start processing
+            source.start(0);
+            
+            // Render processed audio
+            const renderedBuffer = await offlineContext.startRendering();
+            
+            return renderedBuffer;
+        }
+
+        // Create noise reduction filter chain
+        function createNoiseReductionChain(context) {
+            const input = context.createGain();
+            const output = context.createGain();
+            
+            // 1. High-pass filter to remove low-frequency rumble
+            const highPass = context.createBiquadFilter();
+            highPass.type = 'highpass';
+            highPass.frequency.value = 100;
+            highPass.Q.value = 0.707;
+            
+            // 2. Low-pass filter to remove high-frequency noise
+            const lowPass = context.createBiquadFilter();
+            lowPass.type = 'lowpass';
+            lowPass.frequency.value = 5000;
+            lowPass.Q.value = 0.707;
+            
+            // 3. Notch filter for 50/60Hz hum
+            const notch60 = context.createBiquadFilter();
+            notch60.type = 'notch';
+            notch60.frequency.value = 60;
+            notch60.Q.value = 20;
+            
+            const notch50 = context.createBiquadFilter();
+            notch50.type = 'notch';
+            notch50.frequency.value = 50;
+            notch50.Q.value = 20;
+            
+            // 4. Voice presence boost
+            const presence = context.createBiquadFilter();
             presence.type = 'peaking';
-            presence.frequency.value = 2500;
+            presence.frequency.value = 2000;
             presence.Q.value = 1.0;
-            presence.gain.value = strength * 6;
+            presence.gain.value = 6;
             
-            // Clarity boost
-            const clarity = offlineContext.createBiquadFilter();
-            clarity.type = 'highshelf';
-            clarity.frequency.value = 4000;
-            clarity.gain.value = strength * 4;
-            
-            // Gentle compressor
-            const compressor = offlineContext.createDynamicsCompressor();
-            compressor.threshold.value = -20;
-            compressor.knee.value = 10;
-            compressor.ratio.value = 3;
+            // 5. Compressor for dynamic range
+            const compressor = context.createDynamicsCompressor();
+            compressor.threshold.value = -30;
+            compressor.knee.value = 20;
+            compressor.ratio.value = 4;
             compressor.attack.value = 0.005;
             compressor.release.value = 0.1;
             
-            // Volume normalization
-            const gain = offlineContext.createGain();
-            gain.gain.value = 1.0 + (strength * 0.2);
+            // Connect the chain
+            input.connect(notch60);
+            notch60.connect(notch50);
+            notch50.connect(highPass);
+            highPass.connect(lowPass);
+            lowPass.connect(presence);
+            presence.connect(compressor);
+            compressor.connect(output);
             
-            // Connect chain
-            source.connect(input);
-            input.connect(presence);
-            presence.connect(clarity);
-            clarity.connect(compressor);
-            compressor.connect(gain);
-            gain.connect(output);
-            output.connect(offlineContext.destination);
-            
-            source.start(0);
-            return await offlineContext.startRendering();
+            return { input, output };
         }
 
-        // Helper function: Calculate spectral content
-        function calculateSpectralContent(frame) {
-            const fftSize = frame.length;
-            const spectrum = new Float32Array(fftSize / 2);
+        // Download functionality
+        downloadBtn.addEventListener('click', () => {
+            if (!cleanedBlob) return;
             
-            // Simple DFT (real implementation would use FFT)
-            for (let k = 0; k < spectrum.length; k++) {
-                let real = 0;
-                let imag = 0;
-                
-                for (let n = 0; n < fftSize; n++) {
-                    const angle = 2 * Math.PI * k * n / fftSize;
-                    real += frame[n] * Math.cos(angle);
-                    imag += frame[n] * Math.sin(angle);
-                }
-                
-                spectrum[k] = Math.sqrt(real*real + imag*imag) / fftSize;
-            }
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const url = URL.createObjectURL(cleanedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cleaned-audio-${timestamp}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             
-            return spectrum;
-        }
-
-        // Helper function: Resample audio data
-        function resampleAudioData(audioData, originalRate, targetRate) {
-            if (originalRate === targetRate) return audioData;
-            
-            const ratio = originalRate / targetRate;
-            const newLength = Math.round(audioData.length / ratio);
-            const result = new Float32Array(newLength);
-            
-            for (let i = 0; i < newLength; i++) {
-                const idx = i * ratio;
-                const lowerIdx = Math.floor(idx);
-                const upperIdx = Math.min(Math.ceil(idx), audioData.length - 1);
-                const fraction = idx - lowerIdx;
-                
-                result[i] = audioData[lowerIdx] * (1 - fraction) + audioData[upperIdx] * fraction;
-            }
-            
-            return result;
-        }
+            showStatus('Download started!', 'ready');
+        });
 
         // Convert audio buffer to WAV format
         function bufferToWave(abuffer) {
@@ -1062,4 +721,48 @@
             
             // Write WAV header
             writeString(view, 0, 'RIFF');
-            view.setUint32(4
+            view.setUint32(4, 36 + length, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numOfChan, true);
+            view.setUint32(24, abuffer.sampleRate, true);
+            view.setUint32(28, abuffer.sampleRate * 2 * numOfChan, true);
+            view.setUint16(32, numOfChan * 2, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, length, true);
+            
+            // Write PCM data
+            let offset = 44;
+            for (let i = 0; i < abuffer.length; i++) {
+                for (let chan = 0; chan < numOfChan; chan++) {
+                    const sample = Math.max(-1, Math.min(1, abuffer.getChannelData(chan)[i]));
+                    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                    offset += 2;
+                }
+            }
+            
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Revoke object URLs
+            if (originalAudio.src) URL.revokeObjectURL(originalAudio.src);
+            if (cleanedAudio.src) URL.revokeObjectURL(cleanedAudio.src);
+        });
+    </script>
+</body>
+</html>
