@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Recording Cleaner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .upload-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .upload-label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .btn-upload {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-upload:hover:not(:disabled) {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-record {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-record:hover:not(:disabled) {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-record.recording {
+            background: #27ae60;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .btn-stop {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-clean {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .btn-clean:hover:not(:disabled) {
+            background: #8e44ad;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #16a085;
+            color: white;
+        }
+
+        .btn-download:hover:not(:disabled) {
+            background: #138f75;
+            transform: translateY(-2px);
+        }
+
+        .audio-section {
+            margin-top: 20px;
+        }
+
+        .audio-wrapper {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .audio-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status.recording {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.ready {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ AI Voice Cleaner</h1>
+        <p class="subtitle">Record your voice and apply RNNoise AI-powered enhancement</p>
+
+        <div class="info-box">
+            🧠 <strong>RNNoise AI:</strong> Uses a recurrent neural network trained on thousands of hours of real-world noise. Works completely in your browser—no API keys, no uploads, 100% free!
+        </div>
+
+        <div class="upload-section">
+            <label for="fileInput" class="upload-label">
+                📁 Or upload audio/video file to convert & clean
+            </label>
+            <input type="file" id="fileInput" accept="audio/*,video/*" style="display: none;">
+            <button id="uploadBtn" class="btn-upload">
+                <span>📤</span> Choose File
+            </button>
+            <div id="fileName" class="file-name"></div>
+        </div>
+
+        <div id="status" class="status" style="display: none;">
+            <div id="statusText"></div>
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="recordBtn" class="btn-record">
+                <span>🔴</span> Start Recording
+            </button>
+            <button id="stopBtn" class="btn-stop" disabled>
+                <span>⏹️</span> Stop
+            </button>
+            <button id="cleanBtn" class="btn-clean" disabled>
+                <span>✨</span> Clean with AI
+            </button>
+            <button id="downloadBtn" class="btn-download" disabled>
+                <span>💾</span> Download
+            </button>
+        </div>
+
+        <div class="audio-section">
+            <div id="originalAudioSection" style="display: none;" class="audio-wrapper">
+                <span class="audio-label">📼 Original Recording</span>
+                <audio id="originalAudio" controls></audio>
+            </div>
+
+            <div id="cleanedAudioSection" style="display: none;" class="audio-wrapper">
+                <span class="audio-label">✨ AI-Enhanced Recording</span>
+                <audio id="cleanedAudio" controls></audio>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import RNNoise from CDN
+        import { Rnnoise } from 'https://cdn.jsdelivr.net/npm/@shiguredo/rnnoise-wasm@2025.1.5/dist/rnnoise.mjs';
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let originalBlob;
+        let cleanedBlob;
+        let rnnoise = null;
+
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const cleanBtn = document.getElementById('cleanBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const originalAudio = document.getElementById('originalAudio');
+        const cleanedAudio = document.getElementById('cleanedAudio');
+        const status = document.getElementById('status');
+        const statusText = document.getElementById('statusText');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+
+        // Load RNNoise on startup
+        (async () => {
+            try {
+                showStatus('Loading AI model...', 'processing', false);
+                rnnoise = await Rnnoise.load();
+                hideStatus();
+            } catch (err) {
+                showStatus('Error loading AI model: ' + err.message, 'error', false);
+            }
+        })();
+
+        function showStatus(message, type, showProgress = false) {
+            statusText.textContent = message;
+            status.className = 'status ' + type;
+            status.style.display = 'block';
+            progressBar.style.display = showProgress ? 'block' : 'none';
+        }
+
+        function updateProgress(percent) {
+            progressFill.style.width = percent + '%';
+        }
+
+        function hideStatus() {
+            status.style.display = 'none';
+        }
+
+        recordBtn.onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: false,
+                        autoGainControl: true,
+                        sampleRate: 48000
+                    } 
+                });
+                
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    originalBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(originalBlob);
+                    originalAudio.src = url;
+                    document.getElementById('originalAudioSection').style.display = 'block';
+                    cleanBtn.disabled = false;
+                    showStatus('Recording saved! Click "Clean with AI" to enhance.', 'ready', false);
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                recordBtn.classList.add('recording');
+                recordBtn.innerHTML = '<span>⏺️</span> Recording...';
+                recordBtn.disabled = true;
+                stopBtn.disabled = false;
+                showStatus('Recording in progress...', 'recording', false);
+                
+            } catch (err) {
+                showStatus('Error accessing microphone: ' + err.message, 'error', false);
+            }
+        };
+
+        stopBtn.onclick = () => {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                recordBtn.classList.remove('recording');
+                recordBtn.innerHTML = '<span>🔴</span> Start Recording';
+                recordBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        };
+
+        // File upload handlers
+        uploadBtn.onclick = () => {
+            fileInput.click();
+        };
+
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            fileName.textContent = `Selected: ${file.name}`;
+            showStatus('Processing uploaded file...', 'processing', true);
+            updateProgress(10);
+
+            try {
+                // Create audio context
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 48000
+                });
+
+                updateProgress(20);
+
+                // Read file as array buffer
+                const arrayBuffer = await file.arrayBuffer();
+                updateProgress(40);
+
+                // Decode audio/video file
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                updateProgress(60);
+
+                // Convert to WAV
+                const wavBlob = await bufferToWave(audioBuffer);
+                originalBlob = wavBlob;
+                
+                updateProgress(80);
+
+                // Display the audio
+                const url = URL.createObjectURL(originalBlob);
+                originalAudio.src = url;
+                document.getElementById('originalAudioSection').style.display = 'block';
+                cleanBtn.disabled = false;
+
+                updateProgress(100);
+                showStatus('File loaded! Ready to clean with AI.', 'ready', false);
+
+                await audioContext.close();
+
+            } catch (err) {
+                showStatus('Error processing file: ' + err.message, 'error', false);
+                console.error('File processing error:', err);
+            }
+        };
+
+        cleanBtn.onclick = async () => {
+            if (!originalBlob || !rnnoise) return;
+            
+            showStatus('Processing with RNNoise AI... Please wait.', 'processing', true);
+            cleanBtn.disabled = true;
+            updateProgress(10);
+
+            try {
+                // Decode audio to raw PCM
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 48000
+                });
+                
+                updateProgress(20);
+                const arrayBuffer = await originalBlob.arrayBuffer();
+                updateProgress(30);
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                updateProgress(40);
+                
+                // Get mono channel data
+                const channelData = audioBuffer.getChannelData(0);
+                
+                // RNNoise processes in frames of 480 samples (10ms at 48kHz)
+                const frameSize = 480;
+                const totalFrames = Math.ceil(channelData.length / frameSize);
+                const processedData = new Float32Array(channelData.length);
+                
+                // Create RNNoise denoiser state
+                const denoiseState = rnnoise.createDenoiseState();
+                
+                showStatus(`Denoising with AI... 0/${totalFrames} frames`, 'processing', true);
+                
+                // Process audio in chunks to avoid blocking
+                const chunkSize = 100; // Process 100 frames at a time
+                for (let i = 0; i < totalFrames; i += chunkSize) {
+                    const endFrame = Math.min(i + chunkSize, totalFrames);
+                    
+                    for (let frame = i; frame < endFrame; frame++) {
+                        const start = frame * frameSize;
+                        const end = Math.min(start + frameSize, channelData.length);
+                        const frameData = new Float32Array(frameSize);
+                        
+                        // Copy frame data
+                        for (let j = 0; j < frameSize; j++) {
+                            frameData[j] = start + j < end ? channelData[start + j] : 0;
+                        }
+                        
+                        // Process with RNNoise
+                        denoiseState.processFrame(frameData);
+                        
+                        // Copy back processed data
+                        for (let j = 0; j < frameSize && start + j < processedData.length; j++) {
+                            processedData[start + j] = frameData[j];
+                        }
+                    }
+                    
+                    // Update progress
+                    const progress = 40 + (endFrame / totalFrames) * 50;
+                    updateProgress(progress);
+                    showStatus(`Denoising with AI... ${endFrame}/${totalFrames} frames`, 'processing', true);
+                    
+                    // Allow UI to update
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+                
+                // Clean up
+                denoiseState.destroy();
+                
+                updateProgress(95);
+                showStatus('Creating audio file...', 'processing', true);
+                
+                // Create new audio buffer with processed data
+                const cleanedBuffer = audioContext.createBuffer(
+                    1,
+                    processedData.length,
+                    audioBuffer.sampleRate
+                );
+                cleanedBuffer.copyToChannel(processedData, 0);
+                
+                // Convert to WAV
+                cleanedBlob = await bufferToWave(cleanedBuffer);
+                const url = URL.createObjectURL(cleanedBlob);
+                cleanedAudio.src = url;
+                document.getElementById('cleanedAudioSection').style.display = 'block';
+                downloadBtn.disabled = false;
+                
+                updateProgress(100);
+                showStatus('Audio enhanced successfully with AI! 🎉', 'ready', false);
+                
+                await audioContext.close();
+                
+            } catch (err) {
+                showStatus('Error: ' + err.message, 'error', false);
+                cleanBtn.disabled = false;
+                console.error('Processing error:', err);
+            }
+        };
+
+        downloadBtn.onclick = () => {
+            if (!cleanedBlob) return;
+            
+            const url = URL.createObjectURL(cleanedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-enhanced-voice-' + Date.now() + '.wav';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        function bufferToWave(buffer) {
+            const length = buffer.length * buffer.numberOfChannels * 2;
+            const arrayBuffer = new ArrayBuffer(44 + length);
+            const view = new DataView(arrayBuffer);
+            const channels = [];
+            let offset = 0;
+            let pos = 0;
+
+            // Write WAV header
+            setUint32(0x46464952);
+            setUint32(length + 36);
+            setUint32(0x45564157);
+            setUint32(0x20746d66);
+            setUint32(16);
+            setUint16(1);
+            setUint16(buffer.numberOfChannels);
+            setUint32(buffer.sampleRate);
+            setUint32(buffer.sampleRate * buffer.numberOfChannels * 2);
+            setUint16(buffer.numberOfChannels * 2);
+            setUint16(16);
+            setUint32(0x61746164);
+            setUint32(length);
+
+            for (let i = 0; i < buffer.numberOfChannels; i++) {
+                channels.push(buffer.getChannelData(i));
+            }
+
+            while (pos < buffer.length) {
+                for (let i = 0; i < buffer.numberOfChannels; i++) {
+                    let sample = Math.max(-1, Math.min(1, channels[i][pos]));
+                    sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                    view.setInt16(44 + offset, sample, true);
+                    offset += 2;
+                }
+                pos++;
+            }
+
+            function setUint16(data) {
+                view.setUint16(pos, data, true);
+                pos += 2;
+            }
+
+            function setUint32(data) {
+                view.setUint32(pos, data, true);
+                pos += 4;
+            }
+
+            return new Blob([arrayBuffer], { type: 'audio/wav' });
+        }
+    </script>
+</body>
+</html>
